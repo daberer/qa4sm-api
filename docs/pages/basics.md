@@ -113,6 +113,23 @@ filter_info = qa4sm.filter_info(1)
 variable_info = qa4sm.variable_info(1)
 ```
 
+### Listing Your Validation Runs
+
+```python
+# Get all of your validation runs as a DataFrame, indexed by run ID, with
+# the columns 'name', 'datasets' (list of dataset names) and 'progress' (0-100%)
+runs = qa4sm.my_validation_runs()
+
+# e.g. only show runs that are not finished yet
+unfinished = runs[runs['progress'] < 100]
+```
+
+The same list is available from the command line:
+
+```bash
+qa4sm runs
+```
+
 ### Validation Status Monitoring
 
 ```python
@@ -163,15 +180,15 @@ Submit validation jobs for processing on the QA4SM server.
 ```python
 # Method 1: Submit a ValidationConfiguration object
 response = qa4sm.run_validation(config)
-# The response is a pandas Series with the run_id as the index
-run_id = response.index.tolist()[0] if len(response.index) > 0 else None
+# The response is a pandas Series with the run_id as its name
+run_id = response.name if not response.empty else None
 if run_id:
     print("Validation run started with ID:", run_id)
 
 # Method 2: Submit a configuration file path
 response = qa4sm.run_config_validation("my_config.json")
-# The response is a pandas Series with the run_id as the index
-run_id = response.index.tolist()[0] if len(response.index) > 0 else None
+# The response is a pandas Series with the run_id as its name
+run_id = response.name if not response.empty else None
 
 # Method 3: Submit with overrides
 response = qa4sm.run_config_validation(
@@ -240,8 +257,8 @@ config = ValidationConfiguration.from_file("validation_config.json")
 
 # Submit validation job
 response = qa4sm.run_validation(config)
-# The response is a pandas Series with the run_id as the index
-run_id = response.index.tolist()[0] if len(response.index) > 0 else None
+# The response is a pandas Series with the run_id as its name
+run_id = response.name if not response.empty else None
 if run_id:
     print(f"Validation started: {run_id}")
 

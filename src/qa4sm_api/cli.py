@@ -114,6 +114,35 @@ def cli_check(instance: str) -> None:
                    ".qa4smapirc file correctly.")
 
 @cli.command(
+    "runs",
+    short_help="List your validation runs."
+)
+@instance_option
+def cli_runs(instance: str) -> None:
+    """
+    List all validation runs of the user whose token is stored for the
+    chosen instance.
+    """
+    qa4sm = Connection(instance, token='file')
+    runs = qa4sm.my_validation_runs()
+
+    if runs.empty:
+        click.echo(f"No validation runs found on {instance}.")
+        return
+
+    runs['datasets'] = runs['datasets'].str.join("; ")
+    runs['progress'] = runs['progress'].astype(str) + "%"
+    runs = runs.reset_index()
+    # Left-align all columns, similar to `column -t`
+    widths = {col: max(len(col), runs[col].astype(str).str.len().max())
+              for col in runs.columns}
+    click.echo("  ".join(col.ljust(widths[col]) for col in runs.columns))
+    for _, row in runs.iterrows():
+        click.echo("  ".join(
+            str(row[col]).ljust(widths[col]) for col in runs.columns))
+
+
+@cli.command(
     "validate",
     short_help="Start a new validation run."
 )

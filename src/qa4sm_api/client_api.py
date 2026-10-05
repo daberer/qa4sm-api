@@ -812,6 +812,24 @@ class Connection:
             progress = response['progress']
             return status, progress
 
+    def my_validation_runs(self) -> pd.DataFrame:
+        """
+        List all validation runs of the logged-in user.
+
+        Returns
+        -------
+        runs: pd.DataFrame
+            One row per validation run, indexed by run id, with the
+            columns 'name', 'datasets' (list of dataset names) and
+            'progress' (in percent, 0-100).
+        """
+        url = self.url("my-validation-runs-with-token")
+        response = self.session.get(url, headers=self.session.headers)
+        runs = response.data[0]["validation_runs"]
+        return pd.DataFrame(
+            runs, columns=["id", "name", "datasets", "progress"]) \
+            .set_index("id")
+
     def run_validation(self, config):
         """
         Trigger validation run based on the passed config.

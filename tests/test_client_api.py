@@ -197,6 +197,12 @@ class TestConnectionWithToken(unittest.TestCase):
         assert user['auth_token'] == QA4SM_ACCESS[self.con.session.instance]['token']
         assert user['username'] == self.con.session.user
 
+    def test_my_validation_runs(self):
+        runs = self.con.my_validation_runs()
+        assert isinstance(runs, pd.DataFrame)
+        assert runs.index.name == "id"
+        assert list(runs.columns) == ["name", "datasets", "progress"]
+
     def test_delete_validation(self):
         # dry run, dummy respone, validation doesn't actually exist
         response = self.con.delete("xx99999999999-9999-9999",
