@@ -45,6 +45,14 @@ def download():
     pass
 
 
+@cli.group("list", short_help="LIST COMMANDS, see `qa4sm list --help`.")
+def list_():
+    """
+    List information from QA4SM.
+    """
+    pass
+
+
 def setup_api(instance=DEFAULT_INSTANCE):
     """
     Login to instance via username and password. Retrieve API token and store
@@ -113,7 +121,7 @@ def cli_check(instance: str) -> None:
         click.echo("Failed! Please make sure you have configured your "
                    ".qa4smapirc file correctly.")
 
-@cli.command(
+@list_.command(
     "runs",
     short_help="List your validation runs."
 )

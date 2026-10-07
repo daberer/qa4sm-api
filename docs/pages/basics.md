@@ -127,7 +127,7 @@ unfinished = runs[runs['progress'] < 100]
 The same list is available from the command line:
 
 ```bash
-qa4sm runs
+qa4sm list runs
 ```
 
 ### Validation Status Monitoring
